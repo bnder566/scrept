@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>الإعلانات</title>
+</head>
+<body>
+    <h1>قائمة الإعلانات</h1>
+    <a href="{% url 'create_listing' %}">إضافة إعلان جديد</a>
+    <ul>
+        {% for item in listings %}
+            <li><strong>{{ item.title }}</strong> - {{ item.price }} ريال</li>
+        {% empty %}
+            <li>لا توجد إعلانات حالياً.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
