@@ -1,32 +1,72 @@
-<!-- templates/accounts/login.html -->
+{% include 'includes/base_header.html' %}
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <title>تسجيل الدخول</title>
   <style>
-    body { font-family: Tahoma; background: #f4f6f7; padding: 40px; }
+    body {
+      font-family: Tahoma;
+      background: #f4f6f7;
+      padding: 40px;
+    }
+
     .login-container {
-      max-width: 400px;
+      max-width: 450px;
       margin: auto;
       background: white;
       padding: 30px;
       border-radius: 10px;
       box-shadow: 0 0 10px #ccc;
     }
-    h2 { text-align: center; margin-bottom: 25px; }
-    label { display: block; margin: 10px 0 5px; }
-    input { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc; }
-    button {
-      width: 100%; padding: 12px;
-      background: #2196f3; color: white;
-      border: none; border-radius: 8px;
-      margin-top: 20px; font-weight: bold;
+
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
     }
+
+    label {
+      display: block;
+      margin: 10px 0 5px;
+      font-weight: bold;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    .otp-btn {
+      margin-top: 10px;
+      background: #4caf50;
+      color: white;
+      border: none;
+      padding: 10px;
+      width: 100%;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button[type="submit"] {
+      width: 100%;
+      padding: 12px;
+      background: #2196f3;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      margin-top: 20px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
     .back-link {
       margin-top: 15px;
       text-align: center;
     }
+
     .back-link a {
       color: #2196f3;
       text-decoration: none;
@@ -40,18 +80,38 @@
   <h2>تسجيل الدخول</h2>
   <form method="post">
     {% csrf_token %}
+
     <label for="id_username">اسم المستخدم</label>
     {{ form.username }}
+
+    <label for="id_phone">رقم الجوال</label>
+    <input type="text" name="phone" id="id_phone" placeholder="05XXXXXXXX" required>
+
+    <button type="button" class="otp-btn" onclick="sendOTP()">إرسال رمز التحقق</button>
 
     <label for="id_password">كلمة المرور</label>
     {{ form.password }}
 
     <button type="submit">دخول</button>
   </form>
+
   <div class="back-link">
-    <p>ليس لديك حساب؟ <a href="{% url 'register' %}">إنشاء حساب</a></p>
+    <p>ليس لديك حساب؟ <a href="{% url 'accounts:register' %}">إنشاء حساب</a></p>
   </div>
 </div>
+
+{% include 'includes/base_footer.html' %}
+
+<script>
+  function sendOTP() {
+    const phone = document.getElementById('id_phone').value;
+    if (!phone.startsWith('05') || phone.length !== 10) {
+      alert("يرجى إدخال رقم جوال صحيح يبدأ بـ 05 ويتكون من 10 أرقام.");
+    } else {
+      alert("تم إرسال رمز التحقق للجوال: " + phone + " (واجهة فقط)");
+    }
+  }
+</script>
 
 </body>
 </html>

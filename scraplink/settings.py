@@ -30,9 +30,9 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
 
     # تثبيت اللغة العربية افتراضياً عبر ميدل وير مخصص
-    'listings.middleware.ForceArabicMiddleware',  # تأكد أن هذا الميدل وير يعمل بشكل صحيح
+    'listings.middleware.ForceArabicMiddleware',
 
-    'django.middleware.locale.LocaleMiddleware',  # يجب أن يكون موجودًا لدعم i18n
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -80,21 +80,11 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # إعدادات اللغة والتوقيت
-# إعدادات اللغة والتوقيت
 LANGUAGE_CODE = 'ar'
 TIME_ZONE = 'Asia/Riyadh'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
-
-LANGUAGES = [
-    ('ar', 'Arabic'),
-]
-
-LOCALE_PATHS = [
-    BASE_DIR / 'locale',
-]
-
 
 # اللغات المتوفرة
 LANGUAGES = [
@@ -120,3 +110,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # نموذج المستخدم المخصص
 AUTH_USER_MODEL = 'accounts.CustomUser'
+
+# ✅ توجيه المستخدم بعد تسجيل الدخول إلى صفحة الخدمات
+LOGIN_REDIRECT_URL = '/services/'
+
+# (اختياري) توجيه المستخدم بعد تسجيل الخروج
+LOGOUT_REDIRECT_URL = '/login/'

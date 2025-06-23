@@ -1,14 +1,15 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate
 from .models import CustomUser
 
-# نموذج التسجيل
+# 🔐 نموذج تسجيل المستخدم
 class UserRegisterForm(UserCreationForm):
     username = forms.CharField(
         label="اسم المستخدم",
         widget=forms.TextInput(attrs={
-            'oninput': "checkUsernameAvailability(this.value);"
+            'oninput': "checkUsernameAvailability(this.value);",
+            'placeholder': "اسم المستخدم"
         })
     )
     phone_number = forms.CharField(
@@ -36,6 +37,8 @@ class UserRegisterForm(UserCreationForm):
         phone = self.cleaned_data.get('phone_number')
         if not phone.startswith('05') or len(phone) != 10:
             raise forms.ValidationError("رقم الجوال يجب أن يبدأ بـ 05 ويتكون من 10 أرقام")
+        if CustomUser.objects.filter(phone_number=phone).exists():
+            raise forms.ValidationError("رقم الجوال مستخدم مسبقًا")
         return phone
 
     def clean_username(self):
@@ -44,7 +47,8 @@ class UserRegisterForm(UserCreationForm):
             raise forms.ValidationError("اسم المستخدم غير متاح")
         return username
 
-# نموذج تسجيل الدخول
+
+# 🔐 نموذج تسجيل الدخول (باسم المستخدم أو رقم الجوال)
 class UserLoginForm(forms.Form):
     identifier = forms.CharField(label="اسم المستخدم أو رقم الجوال")
     password = forms.CharField(label="كلمة المرور", widget=forms.PasswordInput)
@@ -55,15 +59,18 @@ class UserLoginForm(forms.Form):
         password = cleaned_data.get('password')
 
         if identifier and password:
+            # البحث أولًا عن طريق رقم الجوال
             try:
-                # تحقق هل هو رقم جوال أو اسم مستخدم
                 user = CustomUser.objects.get(phone_number=identifier)
                 username = user.username
             except CustomUser.DoesNotExist:
-                username = identifier  # قد يكون اسم مستخدم
+                username = identifier  # نعتبرها اسم مستخدم
 
             user = authenticate(username=username, password=password)
             if user is None:
                 raise forms.ValidationError("بيانات الدخول غير صحيحة")
             self.user = user
         return cleaned_data
+
+    def get_user(self):
+        return getattr(self, 'user', None)
