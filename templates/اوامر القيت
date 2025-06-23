@@ -1,0 +1,5 @@
+git add .
+git commit -m "أول رفع للمشروع"
+git push -u origin master
+
+.\env\Scripts\activate البيئه

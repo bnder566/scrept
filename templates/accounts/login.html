@@ -1,0 +1,57 @@
+<!-- templates/accounts/login.html -->
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>تسجيل الدخول</title>
+  <style>
+    body { font-family: Tahoma; background: #f4f6f7; padding: 40px; }
+    .login-container {
+      max-width: 400px;
+      margin: auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #ccc;
+    }
+    h2 { text-align: center; margin-bottom: 25px; }
+    label { display: block; margin: 10px 0 5px; }
+    input { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc; }
+    button {
+      width: 100%; padding: 12px;
+      background: #2196f3; color: white;
+      border: none; border-radius: 8px;
+      margin-top: 20px; font-weight: bold;
+    }
+    .back-link {
+      margin-top: 15px;
+      text-align: center;
+    }
+    .back-link a {
+      color: #2196f3;
+      text-decoration: none;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="login-container">
+  <h2>تسجيل الدخول</h2>
+  <form method="post">
+    {% csrf_token %}
+    <label for="id_username">اسم المستخدم</label>
+    {{ form.username }}
+
+    <label for="id_password">كلمة المرور</label>
+    {{ form.password }}
+
+    <button type="submit">دخول</button>
+  </form>
+  <div class="back-link">
+    <p>ليس لديك حساب؟ <a href="{% url 'register' %}">إنشاء حساب</a></p>
+  </div>
+</div>
+
+</body>
+</html>
