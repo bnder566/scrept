@@ -2,7 +2,6 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-
 from accounts.views import login_view  # تسجيل الدخول مباشرة من /login/
 
 urlpatterns = [
@@ -10,7 +9,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     # تسجيل الدخول مباشرة عبر /login/
-    # يستخدم اسم مختلف لتفادي التعارض مع accounts:login
     path('login/', login_view, name='direct_login'),
 
     # روابط الحسابات: تسجيل جديد، تسجيل دخول، تسجيل خروج
@@ -21,8 +19,11 @@ urlpatterns = [
 
     # روابط الصفحات العامة مثل: الرئيسية، من نحن، تواصل معنا
     path('', include('core.urls')),
+
+    # ✅ روابط لوحة تحكم المستخدم personal products
+    path('my-products/', include('userproducts.urls', namespace='userproducts')),
 ]
 
-# دعم عرض ملفات الوسائط (MEDIA) أثناء التطوير
+# دعم ملفات الوسائط أثناء التطوير
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
