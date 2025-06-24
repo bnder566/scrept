@@ -12,6 +12,7 @@ class UserRegisterForm(UserCreationForm):
             'placeholder': "اسم المستخدم"
         })
     )
+
     phone_number = forms.CharField(
         label="رقم الجوال",
         max_length=10,
@@ -47,8 +48,7 @@ class UserRegisterForm(UserCreationForm):
             raise forms.ValidationError("اسم المستخدم غير متاح")
         return username
 
-
-# 🔐 نموذج تسجيل الدخول (باسم المستخدم أو رقم الجوال)
+# 🔐 نموذج تسجيل الدخول باستخدام اسم المستخدم أو رقم الجوال
 class UserLoginForm(forms.Form):
     identifier = forms.CharField(label="اسم المستخدم أو رقم الجوال")
     password = forms.CharField(label="كلمة المرور", widget=forms.PasswordInput)
@@ -59,7 +59,7 @@ class UserLoginForm(forms.Form):
         password = cleaned_data.get('password')
 
         if identifier and password:
-            # البحث أولًا عن طريق رقم الجوال
+            # محاولة تسجيل الدخول باستخدام رقم الجوال
             try:
                 user = CustomUser.objects.get(phone_number=identifier)
                 username = user.username

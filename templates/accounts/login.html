@@ -78,14 +78,18 @@
 
 <div class="login-container">
   <h2>تسجيل الدخول</h2>
+
+  {% if messages %}
+    {% for message in messages %}
+      <p style="color: red; text-align: center;">{{ message }}</p>
+    {% endfor %}
+  {% endif %}
+
   <form method="post">
     {% csrf_token %}
 
-    <label for="id_username">اسم المستخدم</label>
-    {{ form.username }}
-
-    <label for="id_phone">رقم الجوال</label>
-    <input type="text" name="phone" id="id_phone" placeholder="05XXXXXXXX" required>
+    <label for="id_identifier">اسم المستخدم أو رقم الجوال</label>
+    {{ form.identifier }}
 
     <button type="button" class="otp-btn" onclick="sendOTP()">إرسال رمز التحقق</button>
 
@@ -104,14 +108,10 @@
 
 <script>
   function sendOTP() {
-    const phone = document.getElementById('id_phone').value;
-    if (!phone.startsWith('05') || phone.length !== 10) {
-      alert("يرجى إدخال رقم جوال صحيح يبدأ بـ 05 ويتكون من 10 أرقام.");
+    const identifier = document.getElementById('id_identifier').value;
+    if (!identifier.startsWith('05') || identifier.length !== 10) {
+      alert("إذا كنت تدخل رقم جوال، يجب أن يبدأ بـ 05 ويتكون من 10 أرقام.");
     } else {
-      alert("تم إرسال رمز التحقق للجوال: " + phone + " (واجهة فقط)");
+      alert("تم إرسال رمز التحقق إلى: " + identifier + " (واجهة فقط)");
     }
   }
-</script>
-
-</body>
-</html>

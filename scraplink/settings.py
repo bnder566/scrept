@@ -20,7 +20,7 @@ INSTALLED_APPS = [
 
     # تطبيقات المشروع
     'accounts',
-    'listings',
+    'listings',  # ← سنستخدم هذا للتعامل مع المنتجات
     'core',
 ]
 
@@ -29,7 +29,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
 
-    # تثبيت اللغة العربية افتراضياً عبر ميدل وير مخصص
+    # تثبيت اللغة العربية افتراضياً
     'listings.middleware.ForceArabicMiddleware',
 
     'django.middleware.locale.LocaleMiddleware',
@@ -47,7 +47,7 @@ ROOT_URLCONF = 'scraplink.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [BASE_DIR / 'templates'],  # ← مسار مجلد القوالب العام
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -101,7 +101,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# ملفات الوسائط
+# ملفات الوسائط (الصور)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
@@ -111,8 +111,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # نموذج المستخدم المخصص
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
-# ✅ توجيه المستخدم بعد تسجيل الدخول إلى صفحة الخدمات
+# إعادة التوجيه بعد الدخول والخروج
 LOGIN_REDIRECT_URL = '/services/'
-
-# (اختياري) توجيه المستخدم بعد تسجيل الخروج
 LOGOUT_REDIRECT_URL = '/login/'

@@ -5,7 +5,9 @@ from django.urls import reverse
 from .forms import UserRegisterForm, UserLoginForm
 
 def register_view(request):
-    """عرض وتسجيل مستخدم جديد."""
+    """
+    عرض نموذج تسجيل مستخدم جديد ومعالجة بياناته.
+    """
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
         if form.is_valid():
@@ -21,9 +23,11 @@ def register_view(request):
 
 
 def login_view(request):
-    """تسجيل دخول المستخدم."""
+    """
+    تسجيل دخول المستخدم باستخدام اسم المستخدم أو رقم الجوال.
+    """
     if request.method == 'POST':
-        form = UserLoginForm(request, data=request.POST)
+        form = UserLoginForm(data=request.POST)  # ✅ هذا هو التعديل الصحيح
         if form.is_valid():
             user = form.get_user()
             login(request, user)
@@ -38,7 +42,9 @@ def login_view(request):
 
 
 def logout_view(request):
-    """تسجيل الخروج."""
+    """
+    تسجيل الخروج من الحساب.
+    """
     logout(request)
     messages.info(request, "تم تسجيل الخروج بنجاح.")
     return redirect(reverse('accounts:login'))
