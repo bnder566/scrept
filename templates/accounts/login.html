@@ -11,11 +11,13 @@
     padding: 30px;
     border-radius: 10px;
     box-shadow: 0 0 10px #ccc;
+    margin-top: 50px;
   }
 
   h2 {
     text-align: center;
     margin-bottom: 25px;
+    color: #333;
   }
 
   label {
@@ -29,6 +31,7 @@
     padding: 10px;
     border-radius: 6px;
     border: 1px solid #ccc;
+    font-size: 15px;
   }
 
   .otp-btn {
@@ -53,6 +56,7 @@
     margin-top: 20px;
     font-weight: bold;
     cursor: pointer;
+    font-size: 16px;
   }
 
   .back-link {
@@ -65,6 +69,20 @@
     text-decoration: none;
     font-size: 14px;
   }
+
+  .message-error {
+    color: red;
+    text-align: center;
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+
+  .message-success {
+    color: green;
+    text-align: center;
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
 </style>
 
 <div class="login-container">
@@ -72,11 +90,11 @@
 
   {% if messages %}
     {% for message in messages %}
-      <p style="color: red; text-align: center;">{{ message }}</p>
+      <p class="message-{{ message.tags }}">{{ message }}</p>
     {% endfor %}
   {% endif %}
 
-  <form method="post">
+  <form method="post" novalidate>
     {% csrf_token %}
 
     <label for="id_identifier">اسم المستخدم أو رقم الجوال</label>
@@ -97,11 +115,12 @@
 
 <script>
   function sendOTP() {
-    const identifier = document.getElementById('id_identifier').value;
-    if (!identifier.startsWith('05') || identifier.length !== 10) {
-      alert("إذا كنت تدخل رقم جوال، يجب أن يبدأ بـ 05 ويتكون من 10 أرقام.");
-    } else {
+    const input = document.getElementById('id_identifier');
+    const identifier = input ? input.value : '';
+    if (/^05\d{8}$/.test(identifier)) {
       alert("تم إرسال رمز التحقق إلى: " + identifier + " (واجهة فقط)");
+    } else {
+      alert("إذا كنت تدخل رقم جوال، يجب أن يبدأ بـ 05 ويتكون من 10 أرقام.");
     }
   }
 </script>

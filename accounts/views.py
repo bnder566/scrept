@@ -4,9 +4,10 @@ from django.contrib import messages
 from django.urls import reverse
 from .forms import UserRegisterForm, UserLoginForm
 
+
 def register_view(request):
     """
-    عرض نموذج تسجيل مستخدم جديد ومعالجة بياناته.
+    عرض نموذج تسجيل مستخدم جديد ومعالجة بيانات التسجيل.
     """
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
@@ -25,14 +26,15 @@ def register_view(request):
 def login_view(request):
     """
     تسجيل دخول المستخدم باستخدام اسم المستخدم أو رقم الجوال.
+    بعد تسجيل الدخول، يتم تحويل المستخدم إلى صفحة 'about'.
     """
     if request.method == 'POST':
-        form = UserLoginForm(data=request.POST)  # ✅ هذا هو التعديل الصحيح
+        form = UserLoginForm(data=request.POST)
         if form.is_valid():
             user = form.get_user()
             login(request, user)
             messages.success(request, "تم تسجيل الدخول بنجاح.")
-            return redirect(reverse('core:home'))
+            return redirect(reverse('core:about'))  # ← تحويل المستخدم إلى صفحة "about"
         else:
             messages.error(request, "اسم المستخدم أو كلمة المرور غير صحيحة.")
     else:
@@ -43,7 +45,7 @@ def login_view(request):
 
 def logout_view(request):
     """
-    تسجيل الخروج من الحساب.
+    تسجيل الخروج من الحساب وإعادة التوجيه إلى صفحة تسجيل الدخول.
     """
     logout(request)
     messages.info(request, "تم تسجيل الخروج بنجاح.")
