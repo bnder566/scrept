@@ -7,9 +7,11 @@ from .models import CustomUser
 class UserRegisterForm(UserCreationForm):
     username = forms.CharField(
         label="اسم المستخدم",
+        max_length=150,
         widget=forms.TextInput(attrs={
             'oninput': "checkUsernameAvailability(this.value);",
-            'placeholder': "اسم المستخدم"
+            'placeholder': "اسم المستخدم",
+            'class': "form-control"
         })
     )
 
@@ -19,7 +21,8 @@ class UserRegisterForm(UserCreationForm):
         widget=forms.TextInput(attrs={
             'placeholder': 'مثال: 0501234567',
             'pattern': r'^05\d{8}$',
-            'title': 'رقم الجوال يجب أن يبدأ بـ 05 ويتكون من 10 أرقام'
+            'title': 'رقم الجوال يجب أن يبدأ بـ 05 ويتكون من 10 أرقام',
+            'class': "form-control"
         })
     )
 
@@ -36,8 +39,8 @@ class UserRegisterForm(UserCreationForm):
 
     def clean_phone_number(self):
         phone = self.cleaned_data.get('phone_number')
-        if not phone.startswith('05') or len(phone) != 10:
-            raise forms.ValidationError("رقم الجوال يجب أن يبدأ بـ 05 ويتكون من 10 أرقام")
+        if not phone.startswith('05') or len(phone) != 10 or not phone.isdigit():
+            raise forms.ValidationError("رقم الجوال يجب أن يبدأ بـ 05 ويتكون من 10 أرقام صحيحة")
         if CustomUser.objects.filter(phone_number=phone).exists():
             raise forms.ValidationError("رقم الجوال مستخدم مسبقًا")
         return phone
@@ -48,10 +51,23 @@ class UserRegisterForm(UserCreationForm):
             raise forms.ValidationError("اسم المستخدم غير متاح")
         return username
 
+
 # 🔐 نموذج تسجيل الدخول باستخدام اسم المستخدم أو رقم الجوال
 class UserLoginForm(forms.Form):
-    identifier = forms.CharField(label="اسم المستخدم أو رقم الجوال")
-    password = forms.CharField(label="كلمة المرور", widget=forms.PasswordInput)
+    identifier = forms.CharField(
+        label="اسم المستخدم أو رقم الجوال",
+        widget=forms.TextInput(attrs={
+            'placeholder': "ادخل اسم المستخدم أو رقم الجوال",
+            'class': "form-control"
+        })
+    )
+    password = forms.CharField(
+        label="كلمة المرور",
+        widget=forms.PasswordInput(attrs={
+            'placeholder': "كلمة المرور",
+            'class': "form-control"
+        })
+    )
 
     def clean(self):
         cleaned_data = super().clean()
@@ -59,12 +75,11 @@ class UserLoginForm(forms.Form):
         password = cleaned_data.get('password')
 
         if identifier and password:
-            # محاولة تسجيل الدخول باستخدام رقم الجوال
             try:
                 user = CustomUser.objects.get(phone_number=identifier)
                 username = user.username
             except CustomUser.DoesNotExist:
-                username = identifier  # نعتبرها اسم مستخدم
+                username = identifier  # إذا لم يكن رقم جوال، نعتبره اسم مستخدم
 
             user = authenticate(username=username, password=password)
             if user is None:

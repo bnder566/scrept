@@ -1,45 +1,43 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.admin.views.decorators import staff_member_required
-from .models import Listing
-from .forms import ListingForm
+from .models import Product
+from .forms import ProductForm
+from django.http import HttpResponse
 
-# عرض كل الإعلانات
-def listing_list(request):
-    listings = Listing.objects.filter(status='approved').order_by('-created_at')
-    return render(request, 'listings/listing_list.html', {'listings': listings})
-
-# إنشاء إعلان جديد
-def create_listing(request):
+# ✅ عرض صفحة إضافة منتج
+def add_product(request):
     if request.method == 'POST':
-        form = ListingForm(request.POST)
+        form = ProductForm(request.POST, request.FILES)
         if form.is_valid():
-            listing = form.save(commit=False)
-            listing.status = 'pending'  # يتم وضعه كمعلّق تلقائيًا
-            listing.save()
-            return redirect('listing_list')
+            form.save()
+            return redirect('listings:product_list')
     else:
-        form = ListingForm()
-    return render(request, 'listings/create_listing.html', {'form': form})
+        form = ProductForm()
+    return render(request, 'listings/add_product.html', {'form': form})
 
+# ✅ عرض كل المنتجات المتاحة فقط
+def product_list(request):
+    products = Product.objects.filter(is_available=True).order_by('-created_at')
+    return render(request, 'listings/product_list.html', {'products': products})
 
-# ✅ للمشرف: عرض الإعلانات قيد المراجعة
+# ✅ للمشرف: عرض المنتجات غير المتاحة
 @staff_member_required
-def pending_listings(request):
-    listings = Listing.objects.filter(status='pending')
-    return render(request, 'listings/admin_pending_listings.html', {'listings': listings})
+def unavailable_products(request):
+    products = Product.objects.filter(is_available=False)
+    return render(request, 'listings/admin_unavailable_products.html', {'products': products})
 
-# ✅ للمشرف: قبول إعلان
+# ✅ للمشرف: إتاحة منتج
 @staff_member_required
-def approve_listing(request, pk):
-    listing = get_object_or_404(Listing, pk=pk)
-    listing.status = 'approved'
-    listing.save()
-    return redirect('listings:pending_listings')
+def make_product_available(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    product.is_available = True
+    product.save()
+    return redirect('listings:unavailable_products')
 
-# ✅ للمشرف: رفض إعلان
+# ✅ للمشرف: إخفاء منتج من المتجر
 @staff_member_required
-def reject_listing(request, pk):
-    listing = get_object_or_404(Listing, pk=pk)
-    listing.status = 'rejected'
-    listing.save()
-    return redirect('listings:pending_listings')
+def hide_product(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    product.is_available = False
+    product.save()
+    return redirect('listings:unavailable_products')

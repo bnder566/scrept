@@ -2,28 +2,31 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from accounts.views import login_view  # تسجيل الدخول مباشرة من /login/
+
+# استيراد العروض المباشرة
+from accounts.views import login_view
+from listings.views import add_product
+from core.views import sales_view
 
 urlpatterns = [
-    # لوحة تحكم المشرف
+    # لوحة التحكم
     path('admin/', admin.site.urls),
 
-    # تسجيل الدخول مباشرة عبر /login/
+    # روابط مباشرة
     path('login/', login_view, name='direct_login'),
+    path('add-product/', add_product, name='direct_add_product'),
+    path('sales/', sales_view, name='sales'),
 
-    # روابط الحسابات: تسجيل جديد، تسجيل دخول، تسجيل خروج
+    # تطبيقات المشروع
     path('accounts/', include('accounts.urls', namespace='accounts')),
-
-    # روابط الإعلانات (عرض، إضافة، تعديل، حذف المنتجات)
     path('listings/', include('listings.urls')),
-
-    # روابط الصفحات العامة مثل: الرئيسية، من نحن، تواصل معنا
     path('', include('core.urls')),
-
-    # ✅ روابط لوحة تحكم المستخدم personal products
     path('my-products/', include('userproducts.urls', namespace='userproducts')),
+
+    # ✅ تفعيل تطبيق الطلبات (تأكد أن اسم المجلد هو orders وليس orderapp)
+    path('orders/', include(('orders.urls', 'orders'), namespace='orders')),
 ]
 
-# دعم ملفات الوسائط أثناء التطوير
+# إعدادات media عند تفعيل وضع التطوير
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

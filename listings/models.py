@@ -1,32 +1,34 @@
 from django.db import models
-from django.utils.translation import gettext_lazy as _
 
-class Listing(models.Model):
-    class StatusChoices(models.TextChoices):
-        PENDING = 'pending', _('قيد المراجعة')
-        APPROVED = 'approved', _('مقبول')
-        REJECTED = 'rejected', _('مرفوض')
+class Product(models.Model):
+    # خيارات التصنيفات
+    CATEGORY_CHOICES = [
+        ('electronics', 'إلكترونيات'),
+        ('furniture', 'أثاث'),
+        ('metal', 'معادن'),
+        ('other', 'أخرى'),
+    ]
 
-    title = models.CharField(max_length=100, verbose_name=_("عنوان"))
-    description = models.TextField(verbose_name=_("الوصف"))
-    price = models.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        verbose_name=_("السعر"),
-        default=0.00  # ✅ القيمة الافتراضية
-    )
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("تاريخ الإضافة"))
-    
-    status = models.CharField(
-        max_length=20,
-        choices=StatusChoices.choices,
-        default=StatusChoices.PENDING,
-        verbose_name=_("الحالة")
-    )
+    # خيارات الحالة
+    CONDITION_CHOICES = [
+        ('new', 'جديد'),
+        ('used', 'مستعمل'),
+    ]
 
-    class Meta:
-        verbose_name = _("إعلان")
-        verbose_name_plural = _("الإعلانات")
+    name = models.CharField(max_length=255, verbose_name='اسم المنتج')
+    description = models.TextField(blank=True, verbose_name='الوصف')
+    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='السعر')
+    category = models.CharField(max_length=50, choices=CATEGORY_CHOICES, default='other', verbose_name='الفئة')
+    condition = models.CharField(max_length=20, choices=CONDITION_CHOICES, default='used', verbose_name='الحالة')
+    is_available = models.BooleanField(default=True, verbose_name='متاح للبيع')
+    image = models.ImageField(upload_to='product_images/', blank=True, null=True, verbose_name='صورة المنتج')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='تاريخ الإضافة')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='آخر تعديل')
 
     def __str__(self):
-        return self.title
+        return self.name
+
+    class Meta:
+        verbose_name = "منتج"
+        verbose_name_plural = "المنتجات"
+        ordering = ['-created_at']

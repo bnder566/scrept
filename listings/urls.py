@@ -1,21 +1,21 @@
 from django.urls import path
 from .views import (
-    listing_list,
-    create_listing,
-    pending_listings,
-    approve_listing,
-    reject_listing
+    product_list,
+    add_product,
+    unavailable_products,
+    make_product_available,
+    hide_product
 )
 
 app_name = 'listings'
 
 urlpatterns = [
     # 👥 للمستخدم العادي
-    path('', listing_list, name='listing_list'),
-    path('create/', create_listing, name='create_listing'),
+    path('', product_list, name='product_list'),
+    path('add/', add_product, name='add_product'),
 
     # 🛠️ للمشرف
-    path('admin/pending/', pending_listings, name='pending_listings'),
-    path('admin/approve/<int:pk>/', approve_listing, name='approve_listing'),
-    path('admin/reject/<int:pk>/', reject_listing, name='reject_listing'),
+    path('admin/unavailable/', unavailable_products, name='unavailable_products'),
+    path('admin/make-available/<int:pk>/', make_product_available, name='make_product_available'),
+    path('admin/hide/<int:pk>/', hide_product, name='hide_product'),
 ]

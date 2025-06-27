@@ -10,7 +10,9 @@ ALLOWED_HOSTS = []
 
 # التطبيقات المثبتة
 INSTALLED_APPS = [
-    # تطبيقات Django الأساسية
+    'jazzmin',
+
+    # Django apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -20,19 +22,65 @@ INSTALLED_APPS = [
 
     # تطبيقات المشروع
     'accounts',
+    'appointments',
     'listings',
     'core',
-    'userproducts',  # ✅ تمت الإضافة هنا
+    'orders',
+    'userproducts',  # ✅ مستخدم
+    # ❌ 'orderapp' تم حذفه
 ]
 
-# إعدادات الوسطاء (Middleware)
+# إعدادات لوحة تحكم jazzmin
+JAZZMIN_SETTINGS = {
+    "site_title": "لوحة إدارة سكربلينك",
+    "site_header": "إدارة سكربلينك",
+    "site_brand": "SKRAP LINK",
+    "welcome_sign": "مرحباً بك في لوحة التحكم",
+    "site_logo": "static/images/logo.png",
+    "site_logo_classes": "img-circle elevation-2",
+    "copyright": "حقوق النشر © سكربلينك",
+
+    "theme": "darkly",
+    "dark_mode_theme": "darkly",
+    "navigation_expanded": True,
+
+    "order_with_respect_to": [
+        "core",
+        "accounts",
+        "listings",
+        "appointments",
+        "clientorders",
+        "customorders",
+        "myorders",
+        "userproducts",
+        "orders",
+    ],
+
+    "icons": {
+        "core.Location": "fas fa-map-marker-alt",
+        "accounts.CustomUser": "fas fa-user-shield",
+        "listings.Device": "fas fa-microchip",
+        "appointments.Appointment": "fas fa-calendar-check",
+        "clientorders.ClientOrder": "fas fa-shopping-cart",
+        "customorders.CustomOrder": "fas fa-box-open",
+        "myorders.MyOrder": "fas fa-truck",
+        "userproducts.MyProduct": "fas fa-warehouse",
+        "orders.Order": "fas fa-clipboard-list",
+        "auth.User": "fas fa-users-cog",
+        "auth.Group": "fas fa-users",
+    },
+
+    "hide_apps": [],
+    "hide_models": [],
+    "changeform_format": "horizontal_tabs",
+    "custom_css": "static/css/admin_custom.css",
+}
+
+# الوسطاء
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-
-    # تثبيت اللغة العربية افتراضياً عبر ميدل وير مخصص
     'listings.middleware.ForceArabicMiddleware',
-
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -41,7 +89,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# ملف URL الرئيسي
 ROOT_URLCONF = 'scraplink.urls'
 
 # إعدادات القوالب
@@ -61,10 +108,9 @@ TEMPLATES = [
     },
 ]
 
-# إعدادات WSGI
 WSGI_APPLICATION = 'scraplink.wsgi.application'
 
-# إعدادات قاعدة البيانات
+# قاعدة البيانات
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -80,40 +126,34 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-# إعدادات اللغة والتوقيت
+# اللغة والتوقيت
 LANGUAGE_CODE = 'ar'
 TIME_ZONE = 'Asia/Riyadh'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
-# اللغات المتوفرة
-LANGUAGES = [
-    ('ar', 'Arabic'),
-]
+# اللغات
+LANGUAGES = [('ar', 'Arabic')]
 
-# مسار ملفات الترجمة
-LOCALE_PATHS = [
-    BASE_DIR / 'locale',
-]
+# الترجمة
+LOCALE_PATHS = [BASE_DIR / 'locale']
 
-# ملفات الاستايل
+# ملفات static
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# ملفات الوسائط
+# ملفات media
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# الحقل الأساسي الافتراضي
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-# نموذج المستخدم المخصص
+# نموذج المستخدم
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
-# ✅ توجيه المستخدم بعد تسجيل الدخول إلى صفحة الخدمات
+# إعادة التوجيه
 LOGIN_REDIRECT_URL = '/services/'
-
-# (اختياري) توجيه المستخدم بعد تسجيل الخروج
 LOGOUT_REDIRECT_URL = '/login/'
+
+# الحقل الافتراضي
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

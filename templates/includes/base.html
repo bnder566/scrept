@@ -1,38 +1,28 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <title>{% block title %}ScrapLink{% endblock %}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    body {
-      margin: 0;
-      font-family: Tahoma, Arial;
-      background: #f9f9f9;
-      color: #333;
-    }
-    .container {
-      max-width: 1100px;
-      margin: auto;
-      padding: 20px;
-    }
-    a {
-      color: #2196f3;
-      text-decoration: none;
-    }
-    a:hover {
-      text-decoration: underline;
-    }
-  </style>
+
+  <!-- رابط أيقونة الموقع -->
+  <link rel="icon" href="{% static 'favicon.ico' %}">
+
+  <!-- ربط ملف CSS -->
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
 
+  <!-- الشريط العلوي -->
   {% include 'includes/base_header.html' %}
 
+  <!-- محتوى الصفحة -->
   <div class="container">
     {% block content %}{% endblock %}
   </div>
 
+  <!-- الشريط السفلي -->
   {% include 'includes/base_footer.html' %}
 
 </body>
