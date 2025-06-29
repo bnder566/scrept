@@ -48,7 +48,7 @@ JAZZMIN_SETTINGS = {
 
     "theme": "darkly",
     "dark_mode_theme": "darkly",
-    "navigation_expanded": True,
+    "navigation_expanded": False,
 
     "order_with_respect_to": [
         "core",
