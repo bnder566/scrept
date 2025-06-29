@@ -1,19 +1,22 @@
 from django.urls import path
-from .views import home_view, about_view, contact_view, services_view
+from .views import home_view, contact_view, services_view, sales_view
 
-# اسم التطبيق لتسهيل الاستدعاء في reverse() أو {% url %}
+# اسم التطبيق لتسهيل الاستدعاء في reverse() أو {% url 'core:services' %}
 app_name = 'core'
 
 urlpatterns = [
     # الصفحة الرئيسية
     path('', home_view, name='home'),
 
-    # صفحة من نحن
-    path('about/', about_view, name='about'),
+    # صفحة تواصل معنا (عربي + إنجليزي)
+    path('تواصل/', contact_view, name='contact'),
+    path('contact/', contact_view),
 
-    # صفحة تواصل معنا
-    path('contact/', contact_view, name='contact'),
+    # صفحة الخدمات (عربي + إنجليزي)
+    path('الخدمات/', services_view, name='services'),
+    path('services/', services_view),
 
-    # صفحة الخدمات
-    path('services/', services_view, name='services'),
+    # صفحة المبيعات (عربي + إنجليزي)
+    path('المبيعات/', sales_view, name='sales'),
+    path('sales/', sales_view),
 ]

@@ -1,18 +1,17 @@
 from pathlib import Path
 
-# المسار الأساسي للمشروع
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# إعدادات الأمان
 SECRET_KEY = 'django-insecure-fh8g)xa7=f@!a&a731ase7ck@bgr*9=z(wj#&qva+!h=rfe-pm'
 DEBUG = True
 ALLOWED_HOSTS = []
 
+# -------------------------------
 # التطبيقات المثبتة
+# -------------------------------
 INSTALLED_APPS = [
     'jazzmin',
 
-    # Django apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -26,19 +25,26 @@ INSTALLED_APPS = [
     'listings',
     'core',
     'orders',
-    'userproducts',  # ✅ مستخدم
-    # ❌ 'orderapp' تم حذفه
+    'userproducts',
+    'useritems',
+    'user_devices',
 ]
 
-# إعدادات لوحة تحكم jazzmin
+# -------------------------------
+# إعدادات Jazzmin
+# -------------------------------
 JAZZMIN_SETTINGS = {
     "site_title": "لوحة إدارة سكربلينك",
     "site_header": "إدارة سكربلينك",
     "site_brand": "SKRAP LINK",
     "welcome_sign": "مرحباً بك في لوحة التحكم",
-    "site_logo": "static/images/logo.png",
+    "copyright": "جميع الحقوق محفوظة © 2025 لموقع سكرابـلينك",
+
+    "site_logo": "images/logo.png",
+    "site_icon": "images/logo.png",
+    "login_logo": "images/logo.png",
+    "login_logo_dark": "images/logo.png",
     "site_logo_classes": "img-circle elevation-2",
-    "copyright": "حقوق النشر © سكربلينك",
 
     "theme": "darkly",
     "dark_mode_theme": "darkly",
@@ -49,34 +55,42 @@ JAZZMIN_SETTINGS = {
         "accounts",
         "listings",
         "appointments",
-        "clientorders",
-        "customorders",
-        "myorders",
         "userproducts",
         "orders",
+        "useritems",
+        "user_devices",
     ],
 
     "icons": {
         "core.Location": "fas fa-map-marker-alt",
         "accounts.CustomUser": "fas fa-user-shield",
-        "listings.Device": "fas fa-microchip",
+        "listings.Product": "fas fa-box",
         "appointments.Appointment": "fas fa-calendar-check",
-        "clientorders.ClientOrder": "fas fa-shopping-cart",
-        "customorders.CustomOrder": "fas fa-box-open",
-        "myorders.MyOrder": "fas fa-truck",
         "userproducts.MyProduct": "fas fa-warehouse",
         "orders.Order": "fas fa-clipboard-list",
         "auth.User": "fas fa-users-cog",
         "auth.Group": "fas fa-users",
     },
 
+    "default_icon_parents": "fas fa-chevron-circle-right",
+    "default_icon_children": "fas fa-circle",
     "hide_apps": [],
     "hide_models": [],
     "changeform_format": "horizontal_tabs",
-    "custom_css": "static/css/admin_custom.css",
+
+    # ✅ المسار الصحيح لملف CSS المخصص
+    "custom_css": "jazzmin/admin_custom.css",
+    "custom_js": None,
+
+    "related_modal_active": False,
+    "use_google_fonts_cdn": True,
+    "show_ui_builder": False,
+    "language_chooser": False,
 }
 
-# الوسطاء
+# -------------------------------
+# الميدلوير
+# -------------------------------
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -89,9 +103,11 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# -------------------------------
+# إعدادات القوالب
+# -------------------------------
 ROOT_URLCONF = 'scraplink.urls'
 
-# إعدادات القوالب
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -110,7 +126,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'scraplink.wsgi.application'
 
+# -------------------------------
 # قاعدة البيانات
+# -------------------------------
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -118,7 +136,9 @@ DATABASES = {
     }
 }
 
-# تحقق من كلمات المرور
+# -------------------------------
+# التحقق من كلمات المرور
+# -------------------------------
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
@@ -126,34 +146,45 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
+# -------------------------------
 # اللغة والتوقيت
+# -------------------------------
 LANGUAGE_CODE = 'ar'
 TIME_ZONE = 'Asia/Riyadh'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
-# اللغات
-LANGUAGES = [('ar', 'Arabic')]
+LANGUAGES = [
+    ('ar', 'العربية'),
+]
 
-# الترجمة
-LOCALE_PATHS = [BASE_DIR / 'locale']
+LOCALE_PATHS = [
+    BASE_DIR / 'locale',
+]
 
-# ملفات static
+# -------------------------------
+# الملفات الثابتة والوسائط
+# -------------------------------
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / 'static']
+
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
+
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# ملفات media
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# نموذج المستخدم
+# -------------------------------
+# تسجيل الدخول / الخروج
+# -------------------------------
 AUTH_USER_MODEL = 'accounts.CustomUser'
-
-# إعادة التوجيه
 LOGIN_REDIRECT_URL = '/services/'
 LOGOUT_REDIRECT_URL = '/login/'
 
+# -------------------------------
 # الحقل الافتراضي
+# -------------------------------
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
